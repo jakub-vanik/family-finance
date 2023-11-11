@@ -1,0 +1,13 @@
+{% macro format_currency(value) -%}
+  {% if value is number %}
+    {% if value < 0 %}
+      <font style="color: darkred;">
+    {% else %}
+      <font style="color: black;">
+    {% endif %}  
+    {{ "{:,.2f}\u2009Kč".format(value).replace(",", "\u2009") }}
+    </font>
+  {% else %}
+    ---
+  {% endif %}
+{%- endmacro %}

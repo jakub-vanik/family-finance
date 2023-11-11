@@ -1,0 +1,259 @@
+body {
+  font-family: 'Helvetica', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+table {
+  border-spacing: 0;
+}
+
+td { 
+  padding: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.main {
+  margin: 0 auto 0 auto;
+  width: 1000px;
+}
+
+.menu {
+  margin: 20px auto 20px auto;
+  width: 300px;
+}
+
+.menu_item {
+  text-align: center;
+  width: 100px;
+}
+
+.overview_period {
+  margin: 20px auto 20px auto;
+  width: 200px;
+}
+
+.overview_period_select {
+  box-sizing: border-box;
+  height: 35px;
+  text-align: center;
+  width: 200px;
+}
+
+.overview_sheet {
+  margin: 20px 0 20px 0;
+}
+
+.overview_sheet_table {
+  border-spacing: 0;
+  width: 100%;
+}
+
+.overview_sheet_name {
+  font-size: 24px;
+  text-align: center;
+}
+
+.overview_sheet_header {
+  font-weight: bold;
+  padding: 10px 0 10px 0;
+}
+
+.overview_sheet_section {
+  vertical-align: top;
+}
+.overview_sheet_label {
+  height: 35px;
+  padding: 0 10px 5px 0;
+  width: 200px;
+}
+
+.overview_sheet_value {
+  height: 35px;
+  text-align: right;
+  padding: 0 10px 5px 0;
+  width: 150px;
+}
+
+.overview_sheet_action {
+  height: 35px;
+  text-align: right;
+  padding: 0 10px 5px 0;
+  width: 35px;
+}
+
+.overview_sheet_input {
+  border: 1px solid silver;
+  box-sizing: border-box;
+  height: 35px;
+  padding: 5px;
+  width: 100%;
+}
+
+.overview_sheet_save {
+  background-color: lightgray;
+  border: 1px solid silver;
+  box-sizing: border-box;
+  color: green;
+  cursor: pointer;
+  font-size: larger;
+  height: 35px;
+  width: 35px;
+}
+
+.overview_sheet_delete {
+  background-color: lightgray;
+  border: 1px solid silver;
+  box-sizing: border-box;
+  color: red;
+  cursor: pointer;
+  font-size: larger;
+  height: 35px;
+  width: 35px;
+}
+
+.chart_period {
+  margin: 20px auto 20px auto;
+  width: 440px;
+}
+
+.chart_period_select {
+  box-sizing: border-box;
+  height: 35px;
+  margin: 0 10px 0 10px;
+  text-align: center;
+  width: 200px;
+}
+
+.setup_data {
+  margin: 20px auto 20px auto;
+}
+
+.setup_level_0 {
+  height: 35px;
+}
+
+.setup_level_1 {
+  padding: 0 0 0 20px;
+}
+
+.setup_level_2 {
+  height: 35px;
+  padding: 0 0 0 40px;
+}
+
+.setup_level_3 {
+  padding: 0 0 0 60px;
+}
+
+.setup_value {
+  height: 35px;
+  padding: 0 10px 5px 0;
+  width: 150px;
+}
+
+.setup_action {
+  height: 35px;
+  padding: 0 10px 5px 0;
+  width: 35px;
+}
+
+.setup_input {
+  border: 1px solid silver;
+  box-sizing: border-box;
+  height: 35px;
+  padding: 5px;
+  width: 100%;
+}
+
+.setup_save {
+  background-color: lightgray;
+  border: 1px solid silver;
+  box-sizing: border-box;
+  color: green;
+  cursor: pointer;
+  font-size: larger;
+  height: 35px;
+  width: 35px;
+}
+
+.setup_delete {
+  background-color: lightgray;
+  border: 1px solid silver;
+  box-sizing: border-box;
+  color: red;
+  cursor: pointer;
+  font-size: larger;
+  height: 35px;
+  width: 35px;
+}
+
+.upload_statement {
+  margin: 20px auto 20px auto;
+  width: 200px;
+}
+
+.upload_matches {
+  margin: 20px 0 20px 0;
+}
+
+.upload_matches_header {
+  font-weight: bold;
+  padding: 10px 0 10px 0;
+}
+
+.upload_matches_period {
+  height: 35px;
+  padding: 0 10px 5px 0;
+  width: 100px;
+}
+
+.upload_matches_value {
+  height: 35px;
+  padding: 0 50px 5px 0;
+  text-align: right;
+  width: 150px;
+}
+
+.upload_matches_account {
+  height: 35px;
+  padding: 0 50px 5px 0;
+  text-align: right;
+  width: 200px;
+}
+
+.upload_matches_target {
+  height: 35px;
+  text-align: right;
+  padding: 0 10px 5px 0;
+  width: 200px;
+}
+
+.upload_matches_action {
+  height: 35px;
+  text-align: right;
+  padding: 0 10px 5px 0;
+  width: 35px;
+}
+
+.upload_select {
+  box-sizing: border-box;
+  height: 35px;
+  text-align: center;
+  width: 200px;
+}
+
+.upload_save {
+  background-color: lightgray;
+  border: 1px solid silver;
+  box-sizing: border-box;
+  color: green;
+  cursor: pointer;
+  font-size: larger;
+  height: 35px;
+  width: 35px;
+}

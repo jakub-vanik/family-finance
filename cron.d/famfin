@@ -1,0 +1,2 @@
+@reboot user FLASK_APP=/home/user/famfin FLASK_DEBUG=1 DATABASE_PATH=/mnt/data/database.db SCRIPT_NAME=/famfin/ /usr/local/bin/flask run --host=0.0.0.0 &
+@daily user cd /mnt/data/backup && wget -N -P famfin "http://127.0.0.1:5000/backup/dump.sql" && git add famfin && git commit -m "Daily backup"

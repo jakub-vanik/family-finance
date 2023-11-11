@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}Nastavení{% endblock %}
+
+{% block body %}
+  <div class="setup_data">
+    <table>
+      <tr>
+        <td class="setup_level_0">osoby:</td>
+      </tr>
+      {% for person in list_persons() %}
+        <tr>
+          <td class="setup_level_1">
+            <table>
+              <tr>
+                <td>
+                  <form action="{{ url_for("setup.update_person") }}" method="post">
+                    <input type="hidden" name="id" value="{{ person.id }}" />
+                    <table>
+                      <tr>
+                        <td class="setup_value">
+                          <input class="setup_input" type="text" name="name" value="{{ person.name }}" />
+                        </td>
+                        <td class="setup_action">
+                          <input class="setup_save" class="button" type="submit" value="&#10004;" />
+                        </td>
+                      </tr>
+                    </table>
+                  </form>
+                </td>
+                <td class="setup_action">
+                  <form action="{{ url_for("setup.delete_person") }}" method="post">
+                    <input type="hidden" name="id" value="{{ person.id }}" />
+                    <input class="setup_delete" type="submit" value="&#10008;" />
+                  </form>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="setup_level_2">účty:</td>
+        </tr>
+        <tr>
+          <td class="setup_level_3">
+            <table>
+              {% for account in list_accounts(person.id) %}
+                <tr>
+                  <td>
+                    <form action="{{ url_for("setup.update_account") }}" method="post">
+                      <input type="hidden" name="id" value="{{ account.id }}" />
+                      <table>
+                        <tr>
+                          <td class="setup_value">
+                            <input class="setup_input" type="text" name="name" value="{{ account.name }}" />
+                          </td>
+                          <td class="setup_value">
+                            <input class="setup_input" type="text" name="number" value="{{ account.number }}" />
+                          </td>
+                          <td class="setup_value">
+                            <select class="setup_input" name="active">
+                              <option value="1"{% if account.active == 1 %} selected{% endif %}>Aktivní</option>
+                              <option value="0"{% if account.active == 0 %} selected{% endif %}>Ukončený</option>
+                            </select>
+                          </td>
+                          <td class="setup_action">
+                            <input class="setup_save" type="submit" value="&#10004;" />
+                          </td>
+                        </tr>
+                      </table>
+                    </form>
+                  </td>
+                  <td class="setup_action">
+                    <form action="{{ url_for("setup.delete_account") }}" method="post">
+                      <input type="hidden" name="id" value="{{ account.id }}" />
+                      <input class="setup_delete" type="submit" value="&#10008;" />
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+              <tr>
+                <td>
+                  <form action="{{ url_for("setup.insert_account") }}" method="post">
+                    <input type="hidden" name="person_id" value="{{ person.id }}" />
+                    <table>
+                      <tr>
+                        <td class="setup_value">
+                          <input class="setup_input" type="text" name="name" value="" />
+                        </td>
+                        <td class="setup_value">
+                          <input class="setup_input" type="text" name="number" value="" />
+                        </td>
+                        <td class="setup_value">
+                          <select class="setup_input" name="active">
+                            <option value="1" selected>Aktivní</option>
+                            <option value="0">Ukončený</option>
+                          </select>
+                        </td>
+                        <td class="setup_action">
+                          <input class="setup_save" type="submit" value="&#10010;" />
+                        </td>
+                      </tr>
+                    </table>
+                  </form>
+                </td>
+                <td></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="setup_level_2">zaměstníní:</td>
+        </tr>
+        <tr>
+          <td class="setup_level_3">
+            <table>
+              {% for contract in list_contracts(person.id) %}
+                <tr>
+                  <td>
+                    <form action="{{ url_for("setup.update_contract") }}" method="post">
+                      <input type="hidden" name="id" value="{{ contract.id }}" />
+                      <table>
+                        <tr>
+                          <td class="setup_value">
+                            <input class="setup_input" type="text" name="name" value="{{ contract.name }}" />
+                          </td>
+                          <td class="setup_value">
+                            <input class="setup_input" type="text" name="number" value="{{ contract.number }}" />
+                          </td>
+                          <td class="setup_value">
+                            <select class="setup_input" name="active">
+                              <option value="1"{% if contract.active == 1 %} selected{% endif %}>Aktivní</option>
+                              <option value="0"{% if contract.active == 0 %} selected{% endif %}>Ukončený</option>
+                            </select>
+                          </td>
+                          <td class="setup_action">
+                            <input class="setup_save" type="submit" value="&#10004;" />
+                          </td>
+                        </tr>
+                      </table>
+                    </form>
+                  </td>
+                  <td class="setup_action">
+                    <form action="{{ url_for("setup.delete_contract") }}" method="post">
+                      <input type="hidden" name="id" value="{{ contract.id }}" />
+                      <input class="setup_delete" type="submit" value="&#10008;" />
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+              <tr>
+                <td>
+                  <form action="{{ url_for("setup.insert_contract") }}" method="post">
+                    <input type="hidden" name="person_id" value="{{ person.id }}" />
+                    <table>
+                      <tr>
+                        <td class="setup_value">
+                          <input class="setup_input" type="text" name="name" value="" />
+                        </td>
+                        <td class="setup_value">
+                          <input class="setup_input" type="text" name="number" value="" />
+                        </td>
+                        <td class="setup_value">
+                          <select class="setup_input" name="active">
+                            <option value="1" selected>Aktivní</option>
+                            <option value="0">Ukončený</option>
+                          </select>
+                        </td>
+                        <td class="setup_action">
+                          <input class="setup_save" type="submit" value="&#10010;" />
+                        </td>
+                      </tr>
+                    </table>
+                  </form>
+                </td>
+                <td></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      {% endfor %}
+      <tr>
+        <td class="setup_level_1">
+          <form action="{{ url_for("setup.insert_person") }}" method="post">
+            <table>
+              <tr>
+                <td class="setup_value">
+                  <input class="setup_input" type="text" name="name" value="" />
+                </td>
+                <td class="setup_action">
+                  <input class="setup_save" class="button" type="submit" value="&#10010;" />
+                </td>
+              </tr>
+            </table>
+          </form>
+        </td>
+      </tr>
+    </table>
+  </div>
+{% endblock %}

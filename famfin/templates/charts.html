@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Grafy{% endblock %}
+
+{% block body %}
+  <div class="chart_period">
+    <form method="get">
+      <table>
+        <tr>
+          <td>
+            <select class="chart_period_select" name="start" onchange="this.form.submit()">
+              {% for period in list_periods()|reverse %}
+                {% set index = loop.length - loop.index %}
+                <option value="{{ index }}"{% if index == start %} selected{% endif %}>{{ format_period(period) }}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+            <select class="chart_period_select" name="end" onchange="this.form.submit()">
+              {% for period in list_periods()|reverse %}
+                {% set index = loop.length - loop.index + 1 %}
+                <option value="{{ index }}"{% if index == end %} selected{% endif %}>{{ format_period(period) }}</option>
+              {% endfor %}
+            </select>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+  <div id="statements_chart"></div>
+  <div id="incomes_chart"></div>
+  <div id="expenses_chart"></div>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(function() {
+      function drawChart(json, title, isStacked, elementId) {
+        var data = google.visualization.arrayToDataTable(JSON.parse(json));
+        var options = {
+          width: 1000,
+          height: 400,
+          title: title,
+          legend: { position: 'top' },
+          vAxis: { format: '# Kč' },
+          isStacked: isStacked
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById(elementId));
+        chart.draw(data, options);
+      }
+      drawChart('{{ statements|safe }}', 'Zůstatky', false, 'statements_chart');
+      drawChart('{{ incomes|safe }}', 'Příjmy', false, 'incomes_chart');
+      drawChart('{{ expenses|safe }}', 'Výdaje', true, 'expenses_chart');
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% import "utils.html" as utils %}
+
+{% block title %}Upload{% endblock %}
+
+{% block body %}
+  <div class="upload_statement">
+    <form action="{{ url_for("upload.upload_file") }}" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" onchange="this.form.submit()" />
+    </form>
+  </div>
+  {% if matches %}
+    <div class="upload_matches">
+      <table>
+        <tr>
+          <td class="upload_matches_header">Nalezené zůstatky</td>
+        </tr>
+        {% for match in matches.balances %}
+          {% set period = get_period(match.period_id) %}
+          <tr>
+            <td>
+              <form action="{{ url_for("upload.set_statement") }}" method="post">
+                <input type="hidden" name="data" value="{{ data }}" />
+                <input type="hidden" name="period_id" value="{{ period.id }}" />
+                <input type="hidden" name="opening_balance" value="{{ match.balance }}" />
+                <table>
+                  <tr>
+                    <td class="upload_matches_period">{{ format_period(period) }}</td>
+                    <td class="upload_matches_value">{{ utils.format_currency(match.balance) }}</td>
+                    <td class="upload_matches_account">{{ match.account }}</td>
+                    <td class="upload_matches_target">
+                      <select class="upload_select" name="account_id">
+                        <option value="">---</option>
+                        {% for person in list_persons() %}
+                          {% for account in list_accounts(person.id) %}
+                            {% if account.number == match.account %}
+                              <option value="{{ account.id }}" selected>{{ person.name }} - {{ account.name }}</option>
+                            {% else %}
+                              <option value="{{ account.id }}">{{ person.name }} - {{ account.name }}</option>
+                            {% endif %}
+                          {% endfor %}
+                        {% endfor %}
+                      </select>
+                    </td>
+                    <td class="upload_matches_action">
+                      <input class="upload_save" type="submit" value="&#10004;" />
+                    </td>
+                  </tr>
+                </table>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <td class="upload_matches_header">Nalezené příjmy</tdclass="upload_matches_header">
+        </tr>
+        {% for match in matches.incomes %}
+          {% set period = get_period(match.period_id) %}
+          <tr>
+            <td>
+              <form action="{{ url_for("upload.set_income") }}" method="post">
+                <input type="hidden" name="data" value="{{ data }}" />
+                <input type="hidden" name="period_id" value="{{ period.id }}" />
+                <input type="hidden" name="amount" value="{{ match.amount }}" />
+                <table>
+                  <tr>
+                    <td class="upload_matches_period">{{ format_period(period) }}</td>
+                    <td class="upload_matches_value">{{ utils.format_currency(match.amount) }}</td>
+                    <td class="upload_matches_account">{{ match.account }}</td>
+                    <td class="upload_matches_target">
+                      <select class="upload_select" name="contract_id">
+                        <option value="">---</option>
+                        {% for person in list_persons() %}
+                          {% for contract in list_contracts(person.id) %}
+                            {% if contract.number == match.account %}
+                              <option value="{{ contract.id }}" selected>{{ person.name }} - {{ contract.name }}</option>
+                            {% else %}
+                              <option value="{{ contract.id }}">{{ person.name }} - {{ contract.name }}</option>
+                            {% endif %}
+                          {% endfor %}
+                        {% endfor %}
+                      </select>
+                    </td>
+                    <td class="upload_matches_action">
+                      <input class="upload_save" type="submit" value="&#10004;" />
+                    </td>
+                  </tr>
+                </table>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  {% endif %}
+{% endblock %}

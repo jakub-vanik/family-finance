@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+{% import "utils.html" as utils %}
+
+{% block title %}Přehled{% endblock %}
+
+{% block body %}
+  <div class="overview_period">
+    <form method="get">
+      <select class="overview_period_select" name="period" onchange="this.form.submit()">
+        {% for other_period in list_periods()|reverse %}
+          <option value="{{ other_period.id }}"{% if other_period.id == period.id %} selected{% endif %}>{{ format_period(other_period) }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+  <div class="overview_page">
+    <table class="overview_sheet_table">
+      <tr>
+        {% for person in persons %}
+          <td class="overview_sheet_name">{{ person.name }}</td>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for person in persons %}
+          <td class="overview_sheet_header">Zůstatky</td>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for person in persons %}
+          <td class="overview_sheet_section">
+            <table>
+              {% for account in list_accounts(person.id) %}
+                {% set statement = get_statement(account.id, period.id) %}
+                {% if account.active or statement %}
+                  <tr>
+                    <td class="overview_sheet_label">
+                      <div title="{{ account.number }}">{{ account.name }}:</div>
+                    </td>
+                    <td colspan="2">
+                      <form action="{{ url_for("overview.set_statement") }}" method="post">
+                        <input type="hidden" name="account_id" value="{{ account.id }}" />
+                        <input type="hidden" name="period_id" value="{{ period.id }}" />
+                        <table>
+                          <tr>
+                            <td class="overview_sheet_value">
+                              <input class="overview_sheet_input" type="number" name="opening_balance" value="{{ statement.opening_balance }}" step="0.01" />
+                            </td>
+                            <td class="overview_sheet_action">
+                              <input class="overview_sheet_save" type="submit" value="&#10004;" />
+                            </td>
+                          </tr>
+                        </table>
+                      </form>
+                    </td>
+                    <td class="overview_sheet_action">
+                      <form action="{{ url_for("overview.delete_statement") }}" method="post" onsubmit="return confirm('Opravdu vynulovat zůstatek?');">
+                        <input type="hidden" name="account_id" value="{{ account.id }}" />
+                        <input type="hidden" name="period_id" value="{{ period.id }}" />
+                        <input class="overview_sheet_delete" type="submit" value="&#10008;" />
+                      </form>
+                    </td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+              <tr>
+                <td class="overview_sheet_label">celkem:</td>
+                <td class="overview_sheet_value">{{ utils.format_currency(person.calculation.statements) }}</td>
+                <td></td>
+              </tr>
+            </table>
+          </td>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for person in persons %}
+          <td class="overview_sheet_header">Příjmy</td>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for person in persons %}
+          <td class="overview_sheet_section">
+            <table>
+              {% for contract in list_contracts(person.id) %}
+                {% set income = get_income(contract.id, period.id) %}
+                {% if contract.active or income %}
+                  <tr>
+                    <td class="overview_sheet_label">
+                      <div title="{{ contract.number }}">{{ contract.name }}:</div>
+                    </td>
+                    <td colspan="2">
+                      <form action="{{ url_for("overview.set_income") }}" method="post">
+                        <input type="hidden" name="contract_id" value="{{ contract.id }}" />
+                        <input type="hidden" name="period_id" value="{{ period.id }}" />
+                        <table>
+                          <tr>
+                            <td class="overview_sheet_value">
+                              <input class="overview_sheet_input" type="number" name="amount" value="{{ income.amount }}" step="0.01" />
+                            </td>
+                            <td class="overview_sheet_action">
+                              <input class="overview_sheet_save" type="submit" value="&#10004;" />
+                            </td>
+                          </tr>
+                        </table>
+                      </form>
+                    </td>
+                    <td class="overview_sheet_action">
+                      <form action="{{ url_for("overview.delete_income") }}" method="post" onsubmit="return confirm('Opravdu vynulovat příjem?');">
+                        <input type="hidden" name="contract_id" value="{{ contract.id }}" />
+                        <input type="hidden" name="period_id" value="{{ period.id }}" />
+                        <input class="overview_sheet_delete" type="submit" value="&#10008;" />
+                      </form>
+                    </td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+              <tr>
+                <td class="overview_sheet_label">celkem:</td>
+                <td class="overview_sheet_value">{{ utils.format_currency(person.calculation.incomes) }}</td>
+                <td></td>
+              </tr>
+            </table>
+          </td>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for person in persons %}
+          <td class="overview_sheet_header">Výluky</td>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for person in persons %}
+          <td class="overview_sheet_section">
+            <table>
+              {% for exclusion in list_exclusions(person.id, period.id) %}
+                <tr>
+                  <td>
+                    <form action="{{ url_for("overview.update_exclusion") }}" method="post">
+                      <input type="hidden" name="id" value="{{ exclusion.id }}" />
+                      <table>
+                        <tr>
+                          <td class="overview_sheet_label">
+                            <input class="overview_sheet_input" type="text" name="description" value="{{ exclusion.description }}" />
+                          </td>
+                          <td class="overview_sheet_value">
+                            <input class="overview_sheet_input" type="number" name="amount" value="{{ exclusion.amount }}" step="0.01" />
+                          </td>
+                          <td class="overview_sheet_action">
+                            <input class="overview_sheet_save" type="submit" value="&#10004;" />
+                          </td>
+                        </tr>
+                      </table>
+                    </form>
+                  </td>
+                  <td class="overview_sheet_action">
+                    <form action="{{ url_for("overview.delete_exclusion") }}" method="post" onsubmit="return confirm('Opravdu odebrat výluku?');">
+                      <input type="hidden" name="id" value="{{ exclusion.id }}" />
+                      <input class="overview_sheet_delete" type="submit" value="&#10008;" />
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+              <tr>
+                <td>
+                  <form action="{{ url_for("overview.insert_exclusion") }}" method="post">
+                    <input type="hidden" name="person_id" value="{{ person.id }}" />
+                    <input type="hidden" name="period_id" value="{{ period.id }}" />
+                    <table>
+                      <tr>
+                        <td class="overview_sheet_label">
+                          <input class="overview_sheet_input" type="text" name="description" />
+                        </td>
+                        <td class="overview_sheet_value">
+                          <input class="overview_sheet_input" type="number" name="amount" step="0.01" />
+                        </td>
+                        <td class="overview_sheet_action">
+                          <input class="overview_sheet_save" type="submit" value="&#10010;" />
+                        </td>
+                      </tr>
+                    </table>
+                  </form>
+                </td>
+                <td class="overview_sheet_action"></td>
+              </tr>
+            </table>
+          </td>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for person in persons %}
+          <td class="overview_sheet_header">Vyrovnání</td>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for person in persons %}
+          <td class="overview_sheet_section">
+            <table>
+              {% for repayment in list_repayments(person.id, period.id) %}
+                <tr>
+                  <td>
+                    <form action="{{ url_for("overview.update_repayment") }}" method="post">
+                      <input type="hidden" name="id" value="{{ repayment.id }}" />
+                      <table>
+                        <tr>
+                          <td class="overview_sheet_label">
+                            <input class="overview_sheet_input" type="text" name="description" value="{{ repayment.description }}" />
+                          </td>
+                          <td class="overview_sheet_value">
+                            <input class="overview_sheet_input" type="number" name="amount" value="{{ repayment.amount }}" step="0.01" />
+                          </td>
+                          <td class="overview_sheet_action">
+                            <input class="overview_sheet_save" type="submit" value="&#10004;" />
+                          </td>
+                        </tr>
+                      </table>
+                    </form>
+                  </td>
+                  <td class="overview_sheet_action">
+                    <form action="{{ url_for("overview.delete_repayment") }}" method="post" onsubmit="return confirm('Opravdu odebrat vyrovnání?');">
+                      <input type="hidden" name="id" value="{{ repayment.id }}" />
+                      <input class="overview_sheet_delete" type="submit" value="&#10008;" />
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+              <tr>
+                <td>
+                  <form action="{{ url_for("overview.insert_repayment") }}" method="post">
+                    <input type="hidden" name="person_id" value="{{ person.id }}" />
+                    <input type="hidden" name="period_id" value="{{ period.id }}" />
+                    <table>
+                      <tr>
+                        <td class="overview_sheet_label">
+                          <input class="overview_sheet_input" type="text" name="description" />
+                        </td>
+                        <td class="overview_sheet_value">
+                          <input class="overview_sheet_input" type="number" name="amount" step="0.01" />
+                        </td>
+                        <td class="overview_sheet_action">
+                          <input class="overview_sheet_save" type="submit" value="&#10010;" />
+                        </td>
+                      </tr>
+                    </table>
+                  </form>
+                </td>
+                <td class="overview_sheet_action"></td>
+              </tr>
+            </table>
+          </td>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for person in persons %}
+          <td class="overview_sheet_header">Kalkulace</td>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for person in persons %}
+          <td class="overview_sheet_section">
+            <table>
+              <tr>
+                <td class="overview_sheet_label">Celkové výdaje:</td>
+                <td class="overview_sheet_value">{{ utils.format_currency(totals.expenses) }}</td>
+              </tr>
+              <tr>
+                <td class="overview_sheet_label">Skutečný podíl:</td>
+                <td class="overview_sheet_value">{{ utils.format_currency(person.calculation.expenses) }}</td>
+              </tr>
+              <tr>
+                <td class="overview_sheet_label">Férový podíl:</td>
+                <td class="overview_sheet_value">{{ utils.format_currency(person.calculation.fair_expenses) }}</td>
+              </tr>
+              <tr>
+                <td class="overview_sheet_label">Vyrovnání:</td>
+                <td class="overview_sheet_value">{{ utils.format_currency(person.calculation.repayments) }}</td>
+              </tr>
+              <tr>
+                <td class="overview_sheet_label">Rozdíl:</td>
+                <td class="overview_sheet_value">{{ utils.format_currency(person.calculation.difference) }}</td>
+              </tr>
+              <tr>
+                <td class="overview_sheet_label">Suma:</td>
+                <td class="overview_sheet_value">{{ utils.format_currency(person.differences) }}</td>
+              </tr>
+            </table>
+          </td>
+        {% endfor %}
+      </tr>
+    </table>
+  </div>
+{% endblock %}

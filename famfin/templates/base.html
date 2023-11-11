@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <title>Family finance - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename = "style.css") }}" />
+  </head>
+  <body>
+    <div class=main>
+      <div class="menu">
+        <table>
+          <tr>
+            <td class="menu_item">
+              <a href="{{ url_for("overview.index") }}">Přehled</a>
+            </td>
+            <td class="menu_item">
+              <a href="{{ url_for("charts.index") }}">Grafy</a>
+            </td>
+            <td class="menu_item">
+              <a href="{{ url_for("upload.index") }}">Nahrávání</a>
+            </td>
+            <td class="menu_item">
+              <a href="{{ url_for("setup.index") }}">Nastavení</a>
+            </td>
+          </tr>
+        </table>
+      </div>
+      {% block body %}{% endblock %}
+    </div>
+  </body>
+</html>
