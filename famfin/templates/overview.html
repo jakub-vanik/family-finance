@@ -60,6 +60,13 @@
                         <input class="overview_sheet_delete" type="submit" value="&#10008;" />
                       </form>
                     </td>
+                    <td class="overview_sheet_action">
+                      <form action="{{ url_for("overview.copy_statement") }}" method="post" onsubmit="return confirm('Opravdu přenést do dalšího období?');">
+                        <input type="hidden" name="account_id" value="{{ account.id }}" />
+                        <input type="hidden" name="period_id" value="{{ period.id }}" />
+                        <input class="overview_sheet_copy" type="submit" value="&#9112;" />
+                      </form>
+                    </td>
                   </tr>
                 {% endif %}
               {% endfor %}
@@ -111,6 +118,13 @@
                         <input class="overview_sheet_delete" type="submit" value="&#10008;" />
                       </form>
                     </td>
+                    <td class="overview_sheet_action">
+                      <form action="{{ url_for("overview.copy_income") }}" method="post" onsubmit="return confirm('Opravdu přenést do dalšího období?');">
+                        <input type="hidden" name="contract_id" value="{{ contract.id }}" />
+                        <input type="hidden" name="period_id" value="{{ period.id }}" />
+                        <input class="overview_sheet_copy" type="submit" value="&#9112;" />
+                      </form>
+                    </td>
                   </tr>
                 {% endif %}
               {% endfor %}
@@ -156,6 +170,12 @@
                     <form action="{{ url_for("overview.delete_exclusion") }}" method="post" onsubmit="return confirm('Opravdu odebrat výluku?');">
                       <input type="hidden" name="id" value="{{ exclusion.id }}" />
                       <input class="overview_sheet_delete" type="submit" value="&#10008;" />
+                    </form>
+                  </td>
+                  <td class="overview_sheet_action">
+                    <form action="{{ url_for("overview.copy_exclusion") }}" method="post" onsubmit="return confirm('Opravdu přenést do dalšího období?');">
+                      <input type="hidden" name="id" value="{{ exclusion.id }}" />
+                      <input class="overview_sheet_copy" type="submit" value="&#9112;" />
                     </form>
                   </td>
                 </tr>

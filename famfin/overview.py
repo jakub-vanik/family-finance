@@ -73,6 +73,20 @@ def delete_statement():
       calculator.update_differences(prev_period)
     return flask.redirect(flask.url_for(".index", period = period_id))
 
+@bp.route("/copy_statement", methods=["POST"])
+def copy_statement():
+  with database.Database() as flask.g.database:
+    account_id = int(flask.request.form["account_id"])
+    period_id = int(flask.request.form["period_id"])
+    statement = flask.g.database.get_statement(account_id, period_id)
+    next_period = flask.g.database.get_next_period(period_id)
+    if statement and next_period:
+      flask.g.database.set_statement(account_id, next_period["id"], statement["opening_balance"])
+      calculator.update_differences(next_period)
+      period = flask.g.database.get_period(period_id)
+      calculator.update_differences(period)
+    return flask.redirect(flask.url_for(".index", period = period_id))
+
 @bp.route("/set_income", methods=["POST"])
 def set_income():
   with database.Database() as flask.g.database:
@@ -92,6 +106,18 @@ def delete_income():
     flask.g.database.delete_income(contract_id, period_id)
     period = flask.g.database.get_period(period_id)
     calculator.update_differences(period)
+    return flask.redirect(flask.url_for(".index", period = period_id))
+
+@bp.route("/copy_income", methods=["POST"])
+def copy_income():
+  with database.Database() as flask.g.database:
+    contract_id = int(flask.request.form["contract_id"])
+    period_id = int(flask.request.form["period_id"])
+    income = flask.g.database.get_income(contract_id, period_id)
+    next_period = flask.g.database.get_next_period(period_id)
+    if income and next_period:
+      flask.g.database.set_income(contract_id, next_period["id"], income["amount"])
+      calculator.update_differences(next_period)
     return flask.redirect(flask.url_for(".index", period = period_id))
 
 @bp.route("/insert_exclusion", methods=["POST"])
@@ -127,6 +153,17 @@ def delete_exclusion():
     period = flask.g.database.get_period(exclusion["period_id"])
     calculator.update_differences(period)
     return flask.redirect(flask.url_for(".index", period = period["id"]))
+
+@bp.route("/copy_exclusion", methods=["POST"])
+def copy_exclusion():
+  with database.Database() as flask.g.database:
+    id = int(flask.request.form["id"])
+    exclusion = flask.g.database.get_exclusion(id)
+    next_period = flask.g.database.get_next_period(exclusion["period_id"])
+    if next_period:
+      flask.g.database.insert_exclusion(exclusion["person_id"], next_period["id"], exclusion["amount"], exclusion["description"])
+      calculator.update_differences(next_period)
+    return flask.redirect(flask.url_for(".index", period = exclusion["period_id"]))
 
 @bp.route("/insert_repayment", methods=["POST"])
 def insert_repayment():

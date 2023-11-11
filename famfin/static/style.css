@@ -19,7 +19,7 @@ input[type=number] {
 
 .main {
   margin: 0 auto 0 auto;
-  width: 1000px;
+  width: 1200px;
 }
 
 .menu {
@@ -112,6 +112,17 @@ input[type=number] {
   color: red;
   cursor: pointer;
   font-size: larger;
+  height: 35px;
+  width: 35px;
+}
+
+.overview_sheet_copy {
+  background-color: lightgray;
+  border: 1px solid silver;
+  box-sizing: border-box;
+  color: black;
+  cursor: pointer;
+  font-size: medium;
   height: 35px;
   width: 35px;
 }
